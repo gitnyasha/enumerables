@@ -105,4 +105,4 @@ array = [2, 5, 7, 6, 1]
 validate = ["string"]
 
 p array.my_inject { |i, j| i + j }
-end
+
