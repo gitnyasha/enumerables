@@ -1,7 +1,6 @@
 module Enumerable
   def my_each
     return to_module unless block_given?
-    
     x = 0
     while x < length
       yield(to_a[x])
