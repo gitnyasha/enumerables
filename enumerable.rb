@@ -21,7 +21,7 @@ module Enumerable
     self
   end
 
-  def my_sitemsct
+  def my_ssymsct
     return result(:my_each) unless block_given?
 
     arr = []
@@ -53,11 +53,11 @@ module Enumerable
   def my_any?(number = nil)
     result = false
     if block_given?
-      my_each { |items| result = true if yield items }
+      my_each { |syms| result = true if yield syms }
     elsif number
-      my_each { |items| result = true if figure?(items, number) }
+      my_each { |syms| result = true if figure?(syms, number) }
     else
-      my_each { |items| result = true if items }
+      my_each { |syms| result = true if syms }
     end
     result
   end
@@ -65,11 +65,11 @@ module Enumerable
   def my_none?(number = nil)
     result = true
     if block_given?
-      my_each { |items| result = false if yield items }
+      my_each { |syms| result = false if yield syms }
     elsif number
-      my_each { |items| result = false if figure?(items, number) }
+      my_each { |syms| result = false if figure?(syms, number) }
     else
-      my_each { |items| result = false if items }
+      my_each { |syms| result = false if syms }
     end
     result
   end
@@ -99,13 +99,13 @@ module Enumerable
   end
 
   def my_inject(*args)
-    result, item = inj_num(*args)
+    result, sym = inj_num(*args)
     arr = result ? to_a : to_a[1..-1]
     result ||= to_a[0]
     if block_given?
       arr.my_each { |x| result = yield(result, x) }
-    elsif item
-      arr.my_each { |x| result = result.public_send item, x) }
+    elsif sym
+      arr.my_each { |x| result = result.public_send sym, x) }
     end
     result
   end
@@ -121,11 +121,11 @@ module Enumerable
   end
 
   def inj_num(*args)
-    result, item = nil
+    result, sym = nil
     args.my_each do |arg|
       result = arg if arg.is_a? Numeric
-     item = arg unless arg.is_a? Numeric
+     sym = arg unless arg.is_a? Numeric
     end
-    [result, item]
+    [result, sym]
   end
 end
