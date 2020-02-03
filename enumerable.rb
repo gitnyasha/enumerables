@@ -101,13 +101,13 @@ module Enumerable
   end
 
   def my_inject(*args)
-    result, sym = inj_param(*args)
+    result, sample = inj_param(*args)
     arr = result ? to_a : to_a[1..-1]
     result ||= to_a[0]
     if block_given?
       arr.my_each { |x| result = yield(result, x) }
-    elsif sym
-      arr.my_each { |x| result = result.public_send(sym, x) }
+    elsif sample
+      arr.my_each { |x| result = result.public_send(sample, x) }
     end
     result
   end
@@ -123,11 +123,11 @@ module Enumerable
   end
 
   def inj_param(*args)
-    result, sym = nil
+    result, sample = nil
     args.my_each do |arg|
       result = arg if arg.is_a? Numeric
-      sym = arg unless arg.is_a? Numeric
+      sample = arg unless arg.is_a? Numeric
     end
-    [result, sym]
+    [result, sample]
   end
 end
