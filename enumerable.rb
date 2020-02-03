@@ -1,110 +1,131 @@
 module Enumerable
   def my_each
-    for num in 0...self.length
-      yield(self[num])
+    return result unless block_given?
+
+    x = 0
+    while x < length
+      yield(to_a[x])
+      x += 1
     end
+    self
   end
 
   def my_each_with_index
-    for num in 0...self.length
-      yield(self[num], num)
+    return result unless block_given?
+
+    x = 0
+    while x < length
+      yield(self[x], x)
+      x += 1
     end
+    self
   end
 
-  def my_select
-    array = []
-    self.my_each do |list|
-      array.push(list) if yield(list)
+  def my_sitemsct
+    return result(:my_each) unless block_given?
+
+    arr = []
+    x = 0
+    while x < length
+      arr << self[x] if yield(self[x])
+      x += 1
     end
-    return array
+    arr
   end
 
-  def my_all?
-    result = true
-    self.my_each do |i|
-      result = false unless yield(i)
+  def my_all?(number = nil)
+    if block_given?
+      my_each { |x| return false unless yield x }
+    else
+      return my_all? { |obj| obj } unless number
+
+      if number.class == Regexp
+        my_each { |x| return false unless number.match?(x) }
+      elsif number.class == Class
+        my_each { |x| return false unless x.is_a? number }
+      else
+        my_each { |x| return false unless x == number }
+      end
     end
-    return result
+    true
   end
 
-  def my_any?
+  def my_any?(number = nil)
     result = false
-    self.my_each do |i|
-      result = true if yield(i)
+    if block_given?
+      my_each { |items| result = true if yield items }
+    elsif number
+      my_each { |items| result = true if figure?(items, number) }
+    else
+      my_each { |items| result = true if items }
     end
-    return result
+    result
   end
 
-  def my_none?
+  def my_none?(number = nil)
     result = true
-    self.my_each do |i|
-      result = false if yield(i)
+    if block_given?
+      my_each { |items| result = false if yield items }
+    elsif number
+      my_each { |items| result = false if figure?(items, number) }
+    else
+      my_each { |items| result = false if items }
     end
-    return result
+    result
   end
 
-  def my_count(index = not_found)
+  def my_count(arg = nil)
     count = 0
-    if index != not_found
-      self.my_each do |item|
-        count += 1 if item == index
-      end
-    elsif block_given?
-      self.my_each do |item|
-        count += 1 if yield(item)
-      end
+    if block_given?
+      my_each { |x| count += 1 if yield(x) }
+    elsif arg
+      my_each { |x| count += 1 if x == arg }
     else
-      count = self.length
+      count = length
     end
-
-    return count
+    count
   end
 
-  def my_map(records = not_found)
-    if records == not_found
-      self.my_each_with_index do |item, num|
-        self[num] = yield(item)
-      end
-    elsif records != not_found && block_given?
-      self.my_each_with_index do |item, num|
-        self[num] = records.call(item)
-      end
-    elsif records
-      self.my_each_with_index do |item, num|
-        self[num] = records.call(item)
-    end
-  end
+  def my_map(num = nil)
+    return result unless block_given?
 
-    return self
-  end
-
-  def my_inject(sample = not_found)
-    if sample == not_found
-      changes = self.first
+    new_arr = []
+    if block_given?
+      my_each { |x| new_arr << yield(x) }
     else
-      changes = sample
+      my_each { |x| new_arr << num.call(x) }
     end
+    new_arr
+  end
 
-    self.my_each do |item|
-      changes = yield(changes, item)
+  def my_inject(*args)
+    result, item = inj_num(*args)
+    arr = result ? to_a : to_a[1..-1]
+    result ||= to_a[0]
+    if block_given?
+      arr.my_each { |x| result = yield(result, x) }
+    elsif item
+      arr.my_each { |x| result = result.public_send item, x) }
     end
-    return changes
+    result
   end
 
-  def multiply_els(sample_data)
-    return sample_data.my_inject(1) do |a, b|
-             a * b
-           end
+  def multiply_els
+    my_inject { |x, y| x * y }
   end
 
-  answer = multiply_els([2, 4, 5])
-  print answer
-  puts ""
-
-  records = Proc.new do |string|
-    string.upcase
+  def figure?(obj, number)
+    (obj.respond_to?(:eql?) && obj.eql?(number)) ||
+      (number.is_a?(Class) && obj.is_a?(number)) ||
+      (number.is_a?(Regexp) && number.match(obj))
   end
 
-  results = ["a", "b", "c"].my_map(records)
-  print results
+  def inj_num(*args)
+    result, item = nil
+    args.my_each do |arg|
+      result = arg if arg.is_a? Numeric
+     item = arg unless arg.is_a? Numeric
+    end
+    [result, item]
+  end
 end
