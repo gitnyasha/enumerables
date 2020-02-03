@@ -1,22 +1,36 @@
 module Enumerable
   def my_each
-    for num in 0...self.length
-      yield(self[num])
+    return result unless block_given?
+
+    x = 0
+    while x < length
+      yield(to_a[x])
+      x += 1
     end
+    self
   end
 
   def my_each_with_index
-    for num in 0...self.length
-      yield(self[num], num)
+    return result unless block_given?
+
+    x = 0
+    while x < length
+      yield(self[x], x)
+      x += 1
     end
+    self
   end
 
   def my_select
-    array = []
-    self.my_each do |list|
-      array.push(list) if yield(list)
+    return result(:my_each) unless block_given?
+
+    arr = []
+    x = 0
+    while x < length
+      arr << self[x] if yield(self[x])
+      x += 1
     end
-    return array
+    arr
   end
 
   def my_all?
