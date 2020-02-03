@@ -43,11 +43,11 @@ module Enumerable
     return result
   end
 
-  def my_count(i = not_found)
+  def my_count(index = not_found)
     count = 0
-    if i != not_found
+    if index != not_found
       self.my_each do |item|
-        count += 1 if item == i
+        count += 1 if item == index
       end
     elsif block_given?
       self.my_each do |item|
@@ -69,10 +69,11 @@ module Enumerable
       self.my_each_with_index do |item, num|
         self[num] = records.call(item)
       end
-    else records
+    elsif records
       self.my_each_with_index do |item, num|
-      self[num] = records.call(item)
-    end     end
+        self[num] = records.call(item)
+    end     
+  end
 
     return self
   end
