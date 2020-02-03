@@ -95,9 +95,7 @@ module Enumerable
         return changes
     end
   
-  
-  end
-  
+    
   def multiply_els(sample_data)
     return sample_data.my_inject(1) do |a, b| 
         a * b
