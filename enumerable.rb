@@ -1,5 +1,4 @@
 module Enumerable
-    
     def my_each
         for num in 0...self.length
           yield(self[num])
