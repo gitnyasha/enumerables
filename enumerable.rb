@@ -1,6 +1,8 @@
+# frozen_string_literal: false
+
 module Enumerable
   def my_each
-    return result unless block_given?
+    return to_module unless block_given?
 
     x = 0
     while x < length
@@ -11,7 +13,7 @@ module Enumerable
   end
 
   def my_each_with_index
-    return result unless block_given?
+    return to_module unless block_given?
 
     x = 0
     while x < length
@@ -21,8 +23,8 @@ module Enumerable
     self
   end
 
-  def my_sitemsct
-    return result(:my_each) unless block_given?
+  def my_sitemct
+    return to_module(:my_each) unless block_given?
 
     arr = []
     x = 0
@@ -33,43 +35,43 @@ module Enumerable
     arr
   end
 
-  def my_all?(number = nil)
+  def my_all?(items = nil)
     if block_given?
       my_each { |x| return false unless yield x }
     else
-      return my_all? { |obj| obj } unless number
+      return my_all? { |obj| obj } unless items
 
-      if number.class == Regexp
-        my_each { |x| return false unless number.match?(x) }
-      elsif number.class == Class
-        my_each { |x| return false unless x.is_a? number }
+      if items.class == Regexp
+        my_each { |x| return false unless items.match?(x) }
+      elsif items.class == Class
+        my_each { |x| return false unless x.is_a? items }
       else
-        my_each { |x| return false unless x == number }
+        my_each { |x| return false unless x == items }
       end
     end
     true
   end
 
-  def my_any?(number = nil)
+  def my_any?(items = nil)
     result = false
     if block_given?
-      my_each { |items| result = true if yield items }
-    elsif number
-      my_each { |items| result = true if figure?(items, number) }
+      my_each { |item| result = true if yield item }
+    elsif items
+      my_each { |item| result = true if itemstern?(item, items) }
     else
-      my_each { |items| result = true if items }
+      my_each { |item| result = true if item }
     end
     result
   end
 
-  def my_none?(number = nil)
+  def my_none?(items = nil)
     result = true
     if block_given?
-      my_each { |items| result = false if yield items }
-    elsif number
-      my_each { |items| result = false if figure?(items, number) }
+      my_each { |item| result = false if yield item }
+    elsif items
+      my_each { |item| result = false if itemstern?(item, items) }
     else
-      my_each { |items| result = false if items }
+      my_each { |item| result = false if item }
     end
     result
   end
@@ -86,26 +88,26 @@ module Enumerable
     count
   end
 
-  def my_map(num = nil)
-    return result unless block_given?
+  def my_map(param = nil)
+    return to_module unless block_given?
 
     new_arr = []
     if block_given?
       my_each { |x| new_arr << yield(x) }
     else
-      my_each { |x| new_arr << num.call(x) }
+      my_each { |x| new_arr << param.call(x) }
     end
     new_arr
   end
 
   def my_inject(*args)
-    result, item = inj_num(*args)
-    arr = result? to_a : to_a[1..-1]
+    result, sym = inj_param(*args)
+    arr = result ? to_a : to_a[1..-1]
     result ||= to_a[0]
     if block_given?
       arr.my_each { |x| result = yield(result, x) }
-    elsif item
-      arr.my_each { |x| result = result.public_send item, x) }
+    elsif sym
+      arr.my_each { |x| result = result.public_send(sym, x) }
     end
     result
   end
@@ -114,18 +116,18 @@ module Enumerable
     my_inject { |x, y| x * y }
   end
 
-  def figure?(obj, number)
-    (obj.respond_to?(:eql?) && obj.eql?(number)) ||
-      (number.is_a?(Class) && obj.is_a?(number)) ||
-      (number.is_a?(Regexp) && number.match(obj))
+  def itemstern?(obj, items)
+    (obj.respond_to?(:eql?) && obj.eql?(items)) ||
+      (items.is_a?(Class) && obj.is_a?(items)) ||
+      (items.is_a?(Regexp) && items.match(obj))
   end
 
-  def inj_num(*args)
-    result, item = nil
+  def inj_param(*args)
+    result, sym = nil
     args.my_each do |arg|
       result = arg if arg.is_a? Numeric
-     item = arg unless arg.is_a? Numeric
+      sym = arg unless arg.is_a? Numeric
     end
-    [result, item]
+    [result, sym]
   end
 end
