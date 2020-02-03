@@ -72,7 +72,7 @@ module Enumerable
     elsif records
       self.my_each_with_index do |item, num|
         self[num] = records.call(item)
-    end     
+    end
   end
 
     return self
