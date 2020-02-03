@@ -16,6 +16,10 @@ Metrics/ClassLength:
   Max: 150
 Metrics/ModuleLength:
   Max: 150
+Metrics/CyclomaticComplexity:
+  Max: 10
+Metrics/PerceivedComplexity:
+  Max: 15
 Metrics/BlockLength:
   ExcludedMethods: ['describe']
   Max: 30
