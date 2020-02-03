@@ -86,46 +86,23 @@ module Enumerable
     count
   end
 
-  def my_map(num = nil)
-    return result unless block_given?
-
-    new_arr = []
-    if block_given?
-      my_each { |x| new_arr << yield(x) }
-    else
-      my_each { |x| new_arr << num.call(x) }
-    end
-    new_arr
-  end
-
-  def my_inject(*args)
-    result, item = inj_num(*args)
-    arr = result? to_a : to_a[1..-1]
-    result ||= to_a[0]
-    if block_given?
-      arr.my_each { |x| result = yield(result, x) }
-    elsif item
-      arr.my_each { |x| result = result.public_send item, x) }
-    end
+  def my_map(my_proc)
+    result = []
+    self.my_each { |i| result.push(my_proc != nil ? my_proc.call(i) : yield(i)) }
     result
   end
 
-  def multiply_els
-    my_inject { |x, y| x * y }
+  def my_inject(acc = nil)
+    acc, *b = self
+    self.my_each { |i| acc = yield(acc, i) }
+    acc
   end
+end
 
-  def figure?(obj, number)
-    (obj.respond_to?(:eql?) && obj.eql?(number)) ||
-      (number.is_a?(Class) && obj.is_a?(number)) ||
-      (number.is_a?(Regexp) && number.match(obj))
-  end
+my_proc = Proc.new { |i| i.capitalize }
 
-  def inj_num(*args)
-    result, item = nil
-    args.my_each do |arg|
-      result = arg if arg.is_a? Numeric
-     item = arg unless arg.is_a? Numeric
-    end
-    [result, item]
-  end
+array = [2, 5, 7, 6, 1]
+validate = ["string"]
+
+p array.my_inject { |i, j| i + j }
 end
