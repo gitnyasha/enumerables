@@ -1,36 +1,42 @@
 module Enumerable
   def my_each
-    return to_module unless block_given?
-
-    x = 0
-    while x < length
-      yield(to_a[x])
-      x += 1
+    if block_given?
+      i = 0
+      while (i < self.length)
+        yield(self[i])
+        i += 1
+      end
+      self
+    else
+      self.to_enum
     end
-    self
   end
 
   def my_each_with_index
-    return to_module unless block_given?
-
-    x = 0
-    while x < length
-      yield(self[x], x)
-      x += 1
+    if block_given?
+      i = 0
+      while (i < self.length)
+        yield(self[i], i)
+        i += 1
+      end
+      self
+    else
+      self.to_enum
     end
-    self
   end
 
-  def my_sitemct
-    return to_module(:my_each) unless block_given?
-
-    arr = []
-    x = 0
-    while x < length
-      arr << self[x] if yield(self[x])
-      x += 1
+  def my_select
+    if block_given?
+      choice = []
+      self.my_each do |x|
+        if yield(x)
+          choice.push(x)
+        end
+      end
+      choice
+    else
+      self.to_enum
     end
-    arr
   end
 
   def my_all?(items = nil)
@@ -86,16 +92,28 @@ module Enumerable
     count
   end
 
-  def my_map(param = nil)
-    return to_module unless block_given?
-
-    new_arr = []
+  def my_map
     if block_given?
-      my_each { |x| new_arr << yield(x) }
+      numbers = []
+      self.my_each do |x|
+        numbers << yield(x)
+      end
+      numbers
     else
-      my_each { |x| new_arr << param.call(x) }
+      self.to_enum
     end
-    new_arr
+  end
+
+  def my_map_proc(&multiply_num)
+    if block_given?
+      numbers = []
+      self.my_each do |x|
+        numbers << multiply_num.call(x)
+      end
+      numbers
+    else
+      self.to_enum
+    end
   end
 
   def my_inject(*args)
