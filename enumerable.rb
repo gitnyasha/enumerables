@@ -15,7 +15,7 @@ module Enumerable
   def my_each_with_index
     if block_given?
       i = 0
-      while (i < results.length)
+      while i < results.length
         yield(results[i], i)
         i += 1
       end
