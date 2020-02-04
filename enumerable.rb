@@ -2,40 +2,40 @@ module Enumerable
   def my_each
     if block_given?
       i = 0
-      while i < self.length
-        yield(self[i])
+      while i < results.length
+        yield(results[i])
         i += 1
       end
-      self
+      results
     else
-      self.to_enum
+      results.to_enum
     end
   end
 
   def my_each_with_index
     if block_given?
       i = 0
-      while (i < self.length)
-        yield(self[i], i)
+      while (i < results.length)
+        yield(results[i], i)
         i += 1
       end
-      self
+      results
     else
-      self.to_enum
+      results.to_enum
     end
   end
 
   def my_select
     if block_given?
       choice = []
-      self.my_each do |x|
+      results.my_each do |x|
         if yield(x)
           choice.push(x)
         end
       end
       choice
     else
-      self.to_enum
+      results.to_enum
     end
   end
 
@@ -95,24 +95,24 @@ module Enumerable
   def my_map
     if block_given?
       numbers = []
-      self.my_each do |x|
+      results.my_each do |x|
         numbers << yield(x)
       end
       numbers
     else
-      self.to_enum
+      results.to_enum
     end
   end
 
   def my_map_proc(&multiply_num)
     if block_given?
       numbers = []
-      self.my_each do |x|
+      results.my_each do |x|
         numbers << multiply_num.call(x)
       end
       numbers
     else
-      self.to_enum
+      results.to_enum
     end
   end
 
