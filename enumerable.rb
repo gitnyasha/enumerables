@@ -2,7 +2,7 @@ module Enumerable
   def my_each
     if block_given?
       i = 0
-      while (i < self.length)
+      while i < self.length
         yield(self[i])
         i += 1
       end
