@@ -7,53 +7,41 @@ module Enumerable
         i += 1
       end
       results
-    else
-      results.to_enum
     end
   end
 
   def my_each_with_index
     if block_given?
-      i = 0
-      while i < results.length
-        yield(results[i], i)
-        i += 1
-      end
-      results
+        for i in 0..results.length - 1 do
+            yield(results[i], i)
+        end 
     else
-      results.to_enum
+        results
     end
   end
+
 
   def my_select
+    choice = []
     if block_given?
-      choice = []
-      results.my_each do |x|
-        if yield(x)
-          choice.push(x)
+        results.my_each do |x| 
+          choice << x if yield(x)
         end
-      end
-      choice
+        choice
     else
-      results.to_enum
+        results
     end
   end
 
-  def my_all?(items = nil)
+  def my_all?
     if block_given?
-      my_each { |x| return false unless yield x }
+       results.my_each do |x|
+            return false unless yield(x)
+        end
+        true
     else
-      return my_all? { |obj| obj } unless items
-
-      if items.class == Regexp
-        my_each { |x| return false unless items.match?(x) }
-      elsif items.class == Class
-        my_each { |x| return false unless x.is_a? items }
-      else
-        my_each { |x| return false unless x == items }
-      end
-    end
-    true
+       results
+    end  
   end
 
   def my_any?(items = nil)
@@ -93,15 +81,15 @@ module Enumerable
   end
 
   def my_map
+    numbers = []
     if block_given?
-      numbers = []
       results.my_each do |x|
         numbers << yield(x)
       end
-      numbers
     else
-      results.to_enum
+      numbers
     end
+    numbers
   end
 
   def my_map_proc(&multiply_num)
@@ -118,12 +106,12 @@ module Enumerable
 
   def my_inject(*args)
     result, sample = inj_param(*args)
-    arr = result ? to_a : to_a[1..-1]
+    choice = result ? to_a : to_a[1..-1]
     result ||= to_a[0]
     if block_given?
-      arr.my_each { |x| result = yield(result, x) }
+      choice.my_each { |x| result = yield(result, x) }
     elsif sample
-      arr.my_each { |x| result = result.public_send(sample, x) }
+      choice.my_each { |x| result = result.public_send(sample, x) }
     end
     result
   end
