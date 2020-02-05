@@ -12,36 +12,35 @@ module Enumerable
 
   def my_each_with_index
     if block_given?
-        for i in 0..results.length - 1 do
-            yield(results[i], i)
-        end 
+      for i in 0..results.length - 1
+        yield(results[i], i)
+      end
     else
-        results
+      results
     end
   end
-
 
   def my_select
     choice = []
     if block_given?
-        results.my_each do |x| 
-          choice << x if yield(x)
-        end
-        choice
+      results.my_each do |x|
+        choice << x if yield(x)
+      end
+      choice
     else
-        results
+      results
     end
   end
 
   def my_all?
     if block_given?
-       results.my_each do |x|
-            return false unless yield(x)
-        end
-        true
+      results.my_each do |x|
+        return false unless yield(x)
+      end
+      true
     else
-       results
-    end  
+      results
+    end
   end
 
   def my_any?(items = nil)
