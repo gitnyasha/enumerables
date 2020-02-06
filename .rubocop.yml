@@ -39,6 +39,8 @@ Style/FrozenStringLiteralComment:
   EnforcedStyle: never
 Style/IfUnlessModifier:
   Enabled: false
+Style/RedundantSelf:
+  Enabled: false
 
 Layout/HashAlignment:
   EnforcedColonStyle: key
