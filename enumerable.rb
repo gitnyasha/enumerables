@@ -1,136 +1,108 @@
 module Enumerable
   def my_each
-    if block_given?
-      i = 0
-      while i < results.length
-        yield(results[i])
-        i += 1
-      end
-      results
+    i = 0
+    while i < self.size
+      yield(self[i])
+      i += 1
     end
+    self
   end
 
   def my_each_with_index
-    if block_given?
-      for i in 0..results.length - 1
-        yield(results[i], i)
-      end
-    else
-      results
+    (self.size - 1).times do |i|
+      yield(self[i], i)
     end
+    self
   end
 
   def my_select
-    choice = []
-    if block_given?
-      results.my_each do |x|
-        choice << x if yield(x)
-      end
-      choice
-    else
-      results
+    item = []
+    self.my_each do |i|
+      item << i if yield(i)
     end
+    item
   end
 
   def my_all?
-    if block_given?
-      results.my_each do |x|
-        return false unless yield(x)
-      end
-      true
-    else
-      results
+    item = []
+    self.my_each do |i|
+      item << i if yield(i)
     end
+
+    return true if item.size == self.size
+    return
   end
 
-  def my_any?(items = nil)
-    result = false
-    if block_given?
-      my_each { |item| result = true if yield item }
-    elsif items
-      my_each { |item| result = true if itemstern?(item, items) }
-    else
-      my_each { |item| result = true if item }
+  def my_any?
+    item = []
+    self.my_each do |i|
+      item << i if yield(i)
     end
-    result
+
+    return true if item.size > 0
+    return
   end
 
-  def my_none?(items = nil)
-    result = true
-    if block_given?
-      my_each { |item| result = false if yield item }
-    elsif items
-      my_each { |item| result = false if itemstern?(item, items) }
-    else
-      my_each { |item| result = false if item }
+  def my_none?
+    item = []
+
+    self.my_each do |i|
+      item << i if yield(i)
     end
-    result
+
+    return true if item.size == 0
+    return
   end
 
-  def my_count(arg = nil)
+  def my_count(*args, &block)
     count = 0
-    if block_given?
-      my_each { |x| count += 1 if yield(x) }
-    elsif arg
-      my_each { |x| count += 1 if x == arg }
-    else
-      count = length
+
+    self.my_each do |i|
+      if args.empty? && !block_given?
+        count += 1
+      elsif block_given?
+        count += 1 if yield(i)
+      else
+        count += 1 if i.include? args
+      end
     end
-    count
+
+    return count
   end
 
   def my_map
-    numbers = []
-    if block_given?
-      results.my_each do |x|
-        numbers << yield(x)
-      end
-    else
-      numbers
+    arr = []
+
+    self.my_each do |i|
+      arr << yield(i)
     end
-    numbers
+
+    arr
   end
 
-  def my_map_proc(&multiply_num)
-    if block_given?
-      numbers = []
-      results.my_each do |x|
-        numbers << multiply_num.call(x)
-      end
-      numbers
-    else
-      results.to_enum
-    end
-  end
+  def my_inject
+    total = self.first
 
-  def my_inject(*args)
-    result, sample = inj_param(*args)
-    choice = result ? to_a : to_a[1..-1]
-    result ||= to_a[0]
-    if block_given?
-      choice.my_each { |x| result = yield(result, x) }
-    elsif sample
-      choice.my_each { |x| result = result.public_send(sample, x) }
+    self.my_each_with_index do |val, i|
+      total = yield(val, i)
     end
-    result
+    total
   end
 
   def multiply_els
-    my_inject { |x, y| x * y }
+    self.my_inject { |x, y| x * y }
   end
 
-  def itemstern?(obj, items)
-    (obj.respond_to?(:eql?) && obj.eql?(items)) ||
-      (items.is_a?(Class) && obj.is_a?(items)) ||
-      (items.is_a?(Regexp) && items.match(obj))
-  end
+  def my_map_proc(proc)
+    arr = []
 
-  def inj_param(*args)
-    result, sample = nil
-    args.my_each do |arg|
-      result = arg if arg.is_a? Numeric
-      sample = arg unless arg.is_a? Numeric
+    self.my_each do |i|
+      if proc && block_given?
+        arr << proc.call(yield(i))
+      else
+        arr << proc.call(i)
+      end
     end
-    [result, sample]
+    arr
   end
 end
