@@ -62,3 +62,5 @@ Layout/MultilineMethodCallIndentation:
 Layout/EmptyLineAfterGuardClause:
   Enabled: false
   
+Lint/UnusedMethodArgument:
+  Enabled: false
