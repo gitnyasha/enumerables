@@ -41,6 +41,16 @@ Style/IfUnlessModifier:
   Enabled: false
 Style/RedundantSelf:
   Enabled: false
+Style/RedundantReturn:
+  Enabled: false
+Style/NumericPredicate:
+  Enabled: false
+Style/ZeroLengthPredicate:
+  Enabled: false
+Style/IfInsideElse:
+  Enabled: false
+Style/ConditionalAssignment:
+  Enabled: false
 
 Layout/HashAlignment:
   EnforcedColonStyle: key
@@ -49,4 +59,6 @@ Layout/ExtraSpacing:
 Layout/MultilineMethodCallIndentation:
   Enabled: true
   EnforcedStyle: indented
+Layout/EmptyLineAfterGuardClause:
+  Enabled: false
   
