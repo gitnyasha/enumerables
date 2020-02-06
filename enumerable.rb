@@ -67,8 +67,8 @@ module Enumerable
     arr
   end
 
-  def my_inject(initial = nil)
-    if initial == nil
+  def my_inject(initial = nil?)
+    if initial == nil?
       total = self.first
     else
       total = initial
