@@ -24,34 +24,21 @@ module Enumerable
   end
 
   def my_all?
-    item = []
-    self.my_each do |i|
-      item << i if yield(i)
-    end
-
-    return true if item.size == self.size
-    return
+    result = true
+    self.my_each { |item| result = false unless yield(item) }
+    return result
   end
 
   def my_any?
-    item = []
-    self.my_each do |i|
-      item << i if yield(i)
-    end
-
-    return true if item.size > 0
-    return
+    result = false
+    self.my_each { |item| result = true if yield(item) }
+    return result
   end
 
   def my_none?
-    item = []
-
-    self.my_each do |i|
-      item << i if yield(i)
-    end
-
-    return true if item.size == 0
-    return
+    result = true
+    self.my_each { |item| result = false if yield(item) }
+    return result
   end
 
   def my_count(*args, &block)
@@ -80,17 +67,21 @@ module Enumerable
     arr
   end
 
-  def my_inject
-    total = self.first
-
-    self.my_each_with_index do |val, i|
-      total = yield(val, i)
+  def my_inject(initial = nil)
+    if initial == nil
+      total = self.first
+    else
+      total = initial
     end
-    total
+
+    self.my_each do |element|
+      total = yield(total, element)
+    end
+    return total
   end
 
-  def multiply_els
-    self.my_inject { |x, y| x * y }
+  def multiply_els(items)
+    return items.my_inject(1) { |a, b| a * b }
   end
 
   def my_map_proc(proc)
