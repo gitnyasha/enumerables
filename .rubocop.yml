@@ -1,0 +1,66 @@
+AllCops:
+  Exclude:
+    - "README.md"
+    - "Guardfile"
+    - "Rakefile"
+
+  DisplayCopNames: true
+
+Layout/LineLength:
+  Max: 120
+Metrics/MethodLength:
+  Max: 20
+Metrics/AbcSize:
+  Max: 50
+Metrics/ClassLength:
+  Max: 150
+Metrics/ModuleLength:
+  Max: 150
+Metrics/CyclomaticComplexity:
+  Max: 10
+Metrics/PerceivedComplexity:
+  Max: 15
+Metrics/BlockLength:
+  ExcludedMethods: ['describe']
+  Max: 30
+
+
+Style/Documentation:
+  Enabled: false
+Style/ClassAndModuleChildren:
+  Enabled: false
+Style/EachForSimpleLoop:
+  Enabled: false
+Style/AndOr:
+  Enabled: false
+Style/DefWithParentheses:
+  Enabled: false
+Style/FrozenStringLiteralComment:
+  EnforcedStyle: never
+Style/IfUnlessModifier:
+  Enabled: false
+Style/RedundantSelf:
+  Enabled: false
+Style/RedundantReturn:
+  Enabled: false
+Style/NumericPredicate:
+  Enabled: false
+Style/ZeroLengthPredicate:
+  Enabled: false
+Style/IfInsideElse:
+  Enabled: false
+Style/ConditionalAssignment:
+  Enabled: false
+
+Layout/HashAlignment:
+  EnforcedColonStyle: key
+Layout/ExtraSpacing:
+  AllowForAlignment: false
+Layout/MultilineMethodCallIndentation:
+  Enabled: true
+  EnforcedStyle: indented
+Layout/EmptyLineAfterGuardClause:
+  Enabled: false
+  
+Lint/UnusedMethodArgument:
+  Enabled: false
