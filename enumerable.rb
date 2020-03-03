@@ -55,7 +55,7 @@ module Enumerable
     if block_given?
       my_each { |items| result = true if yield items }
     elsif para
-      my_each { |items| result = true if sorted?(items, para) }
+      my_each { |items| result = true if pattern?(items, para) }
     else
       my_each { |items| result = true if items }
     end
@@ -67,7 +67,7 @@ module Enumerable
     if block_given?
       my_each { |items| result = false if yield items }
     elsif para
-      my_each { |items| result = false if sorted?(items, para) }
+      my_each { |items| result = false if pattern?(items, para) }
     else
       my_each { |items| result = false if items }
     end
@@ -115,7 +115,7 @@ def multiply_els(something)
   something.inject { |x, y| x * y }
 end
 
-def sorted?(obj, para)
+def pattern?(obj, para)
   (obj.respond_to?(:eql?) && obj.eql?(para)) ||
     (para.is_a?(Class) && obj.is_a?(para)) ||
     (para.is_a?(Regexp) && para.match(obj))
