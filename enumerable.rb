@@ -1,6 +1,6 @@
 module Enumerable
   def my_each
-    return numer unless block_given?
+    return to_enum unless block_given?
 
     x = 0
     while x < length
@@ -11,7 +11,7 @@ module Enumerable
   end
 
   def my_each_with_index
-    return numer unless block_given?
+    return to_enum unless block_given?
 
     x = 0
     while x < length
@@ -22,7 +22,7 @@ module Enumerable
   end
 
   def my_select
-    return numer(:my_each) unless block_given?
+    return to_enum(:my_each) unless block_given?
 
     my_array = []
     x = 0
@@ -33,41 +33,41 @@ module Enumerable
     my_array
   end
 
-  def my_all?(n = nil)
+  def my_all?(para = nil)
     if block_given?
       my_each { |x| return false unless yield x }
     else
-      return my_all? { |obj| obj } unless n
+      return my_all? { |obj| obj } unless para
 
-      if n.class == Regexp
-        my_each { |x| return false unless n.match?(x) }
-      elsif n.class == Class
-        my_each { |x| return false unless x.is_a? n }
+      if para.class == Regexp
+        my_each { |x| return false unless para.match?(x) }
+      elsif para.class == Class
+        my_each { |x| return false unless x.is_a? para }
       else
-        my_each { |x| return false unless x == n }
+        my_each { |x| return false unless x == para }
       end
     end
     true
   end
 
-  def my_any?(n = nil)
+  def my_any?(para = nil)
     result = false
     if block_given?
       my_each { |items| result = true if yield items }
-    elsif n
-      my_each { |items| result = true if pattern?(items, n) }
+    elsif para
+      my_each { |items| result = true if sorted?(items, para) }
     else
       my_each { |items| result = true if items }
     end
     result
   end
 
-  def my_none?(n = nil)
+  def my_none?(para = nil)
     result = true
     if block_given?
       my_each { |items| result = false if yield items }
-    elsif n
-      my_each { |items| result = false if pattern?(items, n) }
+    elsif para
+      my_each { |items| result = false if sorted?(items, para) }
     else
       my_each { |items| result = false if items }
     end
@@ -87,7 +87,7 @@ module Enumerable
   end
 
   def my_map(param = nil)
-    return numer unless block_given?
+    return to_enum unless block_given?
 
     new_my_array = []
     if block_given?
@@ -115,10 +115,10 @@ def multiply_els(something)
   something.inject { |x, y| x * y }
 end
 
-def pattern?(obj, n)
-  (obj.respond_to?(:eql?) && obj.eql?(n)) ||
-    (n.is_a?(Class) && obj.is_a?(n)) ||
-    (n.is_a?(Regexp) && n.match(obj))
+def sorted?(obj, para)
+  (obj.respond_to?(:eql?) && obj.eql?(para)) ||
+    (para.is_a?(Class) && obj.is_a?(para)) ||
+    (para.is_a?(Regexp) && para.match(obj))
 end
 
 def inj_param(*args)
