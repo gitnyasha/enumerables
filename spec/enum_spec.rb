@@ -177,7 +177,7 @@ RSpec.describe Enumerable do
   end
 
   describe "#inj_param" do
-    it "tests for an integer and returns nil for a symbol" do
+    it "tests for an integer and return nil for a symbol" do
       inj = inj_param(1)
       expect(inj).to eql([1, nil])
     end
